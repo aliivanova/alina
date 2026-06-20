@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="ru"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Кроссворд: Анатомия</title>
+    <style>
+        :root {
+            --cell-size: 40px;
+            --bg-color: #f4f7f6;
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --correct-color: #2ecc71;
+            --wrong-color: #e74c3c;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            margin: 0;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+
+        .container {
+            display: flex;
+            gap: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 1200px;
+            margin-top: 20px;
+        }
+
+        /* Стили сетки кроссворда */
+        .crossword-grid {
+            display: grid;
+            /* 20 колонок по 40px */
+            grid-template-columns: repeat(20, var(--cell-size));
+            /* 18 строк по 40px */
+            grid-template-rows: repeat(18, var(--cell-size));
+            gap: 1px;
+            background-color: #333;
+            border: 2px solid #333;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .cell {
+            width: var(--cell-size);
+            height: var(--cell-size);
+            background-color: white;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cell.empty {
+            background-color: #2c3e50;
+        }
+
+        .cell input {
+            width: 100%;
+            height: 100%;
+            border: none;
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            text-transform: uppercase;
+            outline: none;
+            background: transparent;
+            color: var(--primary-color);
+            caret-color: var(--accent-color);
+        }
+
+        .cell input:focus {
+            background-color: #e8f4f8;
+        }
+
+        .cell input.correct {
+            background-color: #d5f5e3 !important;
+            color: var(--correct-color);
+        }
+
+        .cell input.wrong {
+            background-color: #fadbd8 !important;
+            color: var(--wrong-color);
+        }
+
+        .cell-number {
+            position: absolute;
+            top: 2px;
+            left: 3px;
+            font-size: 10px;
+            font-weight: bold;
+            color: #7f8c8d;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        /* Блок с вопросами */
+        .clues-container {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            min-width: 300px;
+            max-width: 400px;
+        }
+
+        .clues-container h3 {
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+
+        .clue-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .clue-list li {
+            margin-bottom: 12px;
+            line-height: 1.4;
+            font-size: 15px;
+        }
+
+        .clue-num {
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-right: 8px;
+        }
+
+        /* Кнопки и сообщения */
+        .controls {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+        }
+
+        button {
+            padding: 12px 30px;
+            font-size: 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .btn-check {
+            background-color: var(--correct-color);
+            color: white;
+        }
+        .btn-check:hover { background-color: #27ae60; transform: translateY(-2px); }
+
+        .btn-reset {
+            background-color: #95a5a6;
+            color: white;
+        }
+        .btn-reset:hover { background-color: #7f8c8d; transform: translateY(-2px); }
+
+        .message {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            height: 25px;
+            color: var(--correct-color);
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🧬 Кроссворд: Анатомия</h1>
+    <p>Введите буквы в клетки. Пересечения слов уже учтены!</p>
+    
+    <div class="container">
+        <!-- Сетка кроссворда -->
+        <div id="grid" class="crossword-grid"><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell"><span class="cell-number">1</span><input type="text" maxlength="1" data-row="1" data-col="5" data-letter="М" class="correct" value="М"></div><div class="cell"><input type="text" maxlength="1" data-row="1" data-col="6" data-letter="О" class="correct" value="О"></div><div class="cell"><input type="text" maxlength="1" data-row="1" data-col="7" data-letter="З" class="correct" value="З"></div><div class="cell"><span class="cell-number">2</span><input type="text" maxlength="1" data-row="1" data-col="8" data-letter="Г" class="correct" value="Г"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell"><input type="text" maxlength="1" data-row="2" data-col="8" data-letter="О" class="correct" value="О"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell"><input type="text" maxlength="1" data-row="3" data-col="8" data-letter="Л" class="correct" value="Л"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell"><input type="text" maxlength="1" data-row="4" data-col="8" data-letter="О" class="correct" value="О"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell"><span class="cell-number">3</span><input type="text" maxlength="1" data-row="5" data-col="8" data-letter="В" class="correct" value="В"></div><div class="cell"><input type="text" maxlength="1" data-row="5" data-col="9" data-letter="Е" class="correct" value="Е"></div><div class="cell"><span class="cell-number">4</span><input type="text" maxlength="1" data-row="5" data-col="10" data-letter="Н" class="correct" value="Н"></div><div class="cell"><input type="text" maxlength="1" data-row="5" data-col="11" data-letter="Ы" class="correct" value="Ы"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell"><input type="text" maxlength="1" data-row="6" data-col="8" data-letter="А" class="correct" value="А"></div><div class="cell empty"></div><div class="cell"><input type="text" maxlength="1" data-row="6" data-col="10" data-letter="Е" class="correct" value="Е"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell"><span class="cell-number">5</span><input type="text" maxlength="1" data-row="7" data-col="10" data-letter="Р" class="correct" value="Р"></div><div class="cell"><input type="text" maxlength="1" data-row="7" data-col="11" data-letter="Е" class="correct" value="Е"></div><div class="cell"><span class="cell-number">6</span><input type="text" maxlength="1" data-row="7" data-col="12" data-letter="Б" class="correct" value="Б"></div><div class="cell"><input type="text" maxlength="1" data-row="7" data-col="13" data-letter="Р" class="correct" value="Р"></div><div class="cell"><input type="text" maxlength="1" data-row="7" data-col="14" data-letter="О" class="correct" value="О"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell"><input type="text" maxlength="1" data-row="8" data-col="10" data-letter="В" class="correct" value="В"></div><div class="cell empty"></div><div class="cell"><input type="text" maxlength="1" data-row="8" data-col="12" data-letter="Е" class="correct" value="Е"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell"><span class="cell-number">7</span><input type="text" maxlength="1" data-row="9" data-col="12" data-letter="Д" class="correct" value="Д"></div><div class="cell"><input type="text" maxlength="1" data-row="9" data-col="13" data-letter="Е" class="correct" value="Е"></div><div class="cell"><input type="text" maxlength="1" data-row="9" data-col="14" data-letter="С" class="correct" value="С"></div><div class="cell"><span class="cell-number">8</span><input type="text" maxlength="1" data-row="9" data-col="15" data-letter="Н" class="correct" value="Н"></div><div class="cell"><input type="text" maxlength="1" data-row="9" data-col="16" data-letter="А" class="correct" value="А"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell"><input type="text" maxlength="1" data-row="10" data-col="12" data-letter="Р" class="correct" value="Р"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell"><input type="text" maxlength="1" data-row="10" data-col="15" data-letter="О" class="correct" value="О"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell"><input type="text" maxlength="1" data-row="11" data-col="12" data-letter="О" class="correct" value="О"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell"><span class="cell-number">9</span><input type="text" maxlength="1" data-row="11" data-col="15" data-letter="Г" class="correct" value="Г"></div><div class="cell"><input type="text" maxlength="1" data-row="11" data-col="16" data-letter="Л" class="correct" value="Л"></div><div class="cell"><input type="text" maxlength="1" data-row="11" data-col="17" data-letter="А" class="correct" value="А"></div><div class="cell"><span class="cell-number">10</span><input type="text" maxlength="1" data-row="11" data-col="18" data-letter="З" class="correct" value="З"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell"><input type="text" maxlength="1" data-row="12" data-col="15" data-letter="А" class="correct" value="А"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell"><input type="text" maxlength="1" data-row="12" data-col="18" data-letter="Р" class="correct" value="Р"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell"><input type="text" maxlength="1" data-row="13" data-col="18" data-letter="А" class="correct" value="А"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell"><input type="text" maxlength="1" data-row="14" data-col="18" data-letter="Ч" class="correct" value="Ч"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell"><input type="text" maxlength="1" data-row="15" data-col="18" data-letter="О" class="correct" value="О"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell"><input type="text" maxlength="1" data-row="16" data-col="18" data-letter="К" class="correct" value="К"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div><div class="cell empty"></div></div>
+
+        <!-- Вопросы -->
+        <div class="clues-container">
+            <h3>По горизонтали:</h3>
+            <ul class="clue-list" id="across-clues"><li><span class="clue-num">1.</span> Центральный орган нервной системы</li><li><span class="clue-num">3.</span> Кровеносные сосуды, несущие кровь к сердцу</li><li><span class="clue-num">5.</span> Изогнутая плоская кость, образующая грудную клетку</li><li><span class="clue-num">7.</span> Слизистая оболочка, покрывающая челюсти</li><li><span class="clue-num">9.</span> Парный орган зрения, воспринимающий свет</li></ul>
+            
+            <h3>По вертикали:</h3>
+            <ul class="clue-list" id="down-clues"><li><span class="clue-num">2.</span> Верхняя часть тела человека, содержащая головной мозг</li><li><span class="clue-num">4.</span> Пучок нервных волокон, проводящий импульсы</li><li><span class="clue-num">6.</span> Часть нижней конечности от таза до колена</li><li><span class="clue-num">8.</span> Парный орган опоры и движения человека</li><li><span class="clue-num">10.</span> Отверстие в центре радужной оболочки глаза</li></ul>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="btn-check" onclick="checkAnswers()">Проверить ответы</button>
+        <button class="btn-reset" onclick="resetGrid()">Очистить всё</button>
+    </div>
+    <div class="message" id="message-box" style="color: var(--correct-color);">🎉 Поздравляем! Все слова разгаданы верно!</div>
+
+<script>
+    // Конфигурация слов: слово, направление, координаты начала (row, col), подсказка
+    // Координаты начинаются с 1. Row - строка сверху вниз, Col - колонка слева направо.
+    const words = [
+        { id: 1, word: "МОЗГ", dir: "across", r: 1, c: 5, clue: "Центральный орган нервной системы" },
+        { id: 2, word: "ГОЛОВА", dir: "down", r: 1, c: 8, clue: "Верхняя часть тела человека, содержащая головной мозг" },
+        { id: 3, word: "ВЕНЫ", dir: "across", r: 5, c: 8, clue: "Кровеносные сосуды, несущие кровь к сердцу" },
+        { id: 4, word: "НЕРВ", dir: "down", r: 5, c: 10, clue: "Пучок нервных волокон, проводящий импульсы" },
+        { id: 5, word: "РЕБРО", dir: "across", r: 7, c: 10, clue: "Изогнутая плоская кость, образующая грудную клетку" },
+        { id: 6, word: "БЕДРО", dir: "down", r: 7, c: 12, clue: "Часть нижней конечности от таза до колена" },
+        { id: 7, word: "ДЕСНА", dir: "across", r: 9, c: 12, clue: "Слизистая оболочка, покрывающая челюсти" },
+        { id: 8, word: "НОГА", dir: "down", r: 9, c: 15, clue: "Парный орган опоры и движения человека" },
+        { id: 9, word: "ГЛАЗ", dir: "across", r: 11, c: 15, clue: "Парный орган зрения, воспринимающий свет" },
+        { id: 10, word: "ЗРАЧОК", dir: "down", r: 11, c: 18, clue: "Отверстие в центре радужной оболочки глаза" }
+    ];
+
+    const ROWS = 18;
+    const COLS = 20;
+    
+    // Инициализация пустой сетки
+    let grid = Array(ROWS + 1).fill().map(() => Array(COLS + 1).fill(null));
+    let inputs = {}; // Хранилище ссылок на DOM элементы input
+
+    function initCrossword() {
+        const gridEl = document.getElementById('grid');
+        const acrossList = document.getElementById('across-clues');
+        const downList = document.getElementById('down-clues');
+
+        // 1. Заполняем логическую сетку буквами и номерами
+        words.forEach(w => {
+            // Добавляем подсказку в список
+            const li = document.createElement('li');
+            li.innerHTML = `<span class="clue-num">${w.id}.</span> ${w.clue}`;
+            if (w.dir === 'across') acrossList.appendChild(li);
+            else downList.appendChild(li);
+
+            // Расставляем буквы в сетке
+            for (let i = 0; i < w.word.length; i++) {
+                let r = w.r + (w.dir === 'down' ? i : 0);
+                let c = w.c + (w.dir === 'across' ? i : 0);
+                
+                if (!grid[r][c]) {
+                    grid[r][c] = { letter: w.word[i], number: null };
+                }
+                
+                // Если это начало слова, добавляем номер (если еще нет)
+                if (i === 0) {
+                    grid[r][c].number = w.id;
+                }
+            }
+        });
+
+        // 2. Рендерим сетку в DOM
+        for (let r = 1; r <= ROWS; r++) {
+            for (let c = 1; c <= COLS; c++) {
+                const cellDiv = document.createElement('div');
+                cellDiv.className = 'cell';
+                
+                if (grid[r][c]) {
+                    // Клетка с буквой
+                    if (grid[r][c].number) {
+                        const numSpan = document.createElement('span');
+                        numSpan.className = 'cell-number';
+                        numSpan.textContent = grid[r][c].number;
+                        cellDiv.appendChild(numSpan);
+                    }
+                    
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.maxLength = 1;
+                    input.dataset.row = r;
+                    input.dataset.col = c;
+                    input.dataset.letter = grid[r][c].letter;
+                    
+                    // Обработчики для удобного ввода
+                    input.addEventListener('input', (e) => handleInput(e, r, c));
+                    input.addEventListener('keydown', (e) => handleKeydown(e, r, c));
+                    
+                    cellDiv.appendChild(input);
+                    inputs[`${r}-${c}`] = input;
+                } else {
+                    // Пустая (черная) клетка
+                    cellDiv.classList.add('empty');
+                }
+                
+                gridEl.appendChild(cellDiv);
+            }
+        }
+    }
+
+    // Обработка ввода буквы (автопереход к следующей клетке)
+    function handleInput(e, r, c) {
+        const val = e.target.value.toUpperCase();
+        e.target.value = val; // Приводим к верхнему регистру
+        
+        // Сбрасываем стили проверки при новом вводе
+        e.target.classList.remove('correct', 'wrong');
+        document.getElementById('message-box').textContent = '';
+
+        if (val) {
+            // Пытаемся найти следующую клетку в том же слове
+            // Для упрощения просто переходим вправо, если есть клетка, иначе вниз
+            let nextR = r, nextC = c + 1;
+            if (!inputs[`${nextR}-${nextC}`]) {
+                nextR = r + 1; nextC = c;
+            }
+            if (inputs[`${nextR}-${nextC}`]) {
+                inputs[`${nextR}-${nextC}`].focus();
+            }
+        }
+    }
+
+    // Обработка Backspace (возврат к предыдущей клетке)
+    function handleKeydown(e, r, c) {
+        if (e.key === 'Backspace' && !e.target.value) {
+            let prevR = r, prevC = c - 1;
+            if (!inputs[`${prevR}-${prevC}`]) {
+                prevR = r - 1; prevC = c;
+            }
+            if (inputs[`${prevR}-${prevC}`]) {
+                inputs[`${prevR}-${prevC}`].focus();
+            }
+        }
+    }
+
+    // Проверка ответов
+    function checkAnswers() {
+        let allCorrect = true;
+        let filledCount = 0;
+        let totalCount = Object.keys(inputs).length;
+
+        for (let key in inputs) {
+            const input = inputs[key];
+            const val = input.value.toUpperCase();
+            const correctLetter = input.dataset.letter;
+
+            input.classList.remove('correct', 'wrong');
+
+            if (val) {
+                filledCount++;
+                if (val === correctLetter) {
+                    input.classList.add('correct');
+                } else {
+                    input.classList.add('wrong');
+                    allCorrect = false;
+                }
+            } else {
+                allCorrect = false;
+            }
+        }
+
+        const msgBox = document.getElementById('message-box');
+        if (filledCount === 0) {
+            msgBox.textContent = "⚠️ Сначала введите буквы в клетки!";
+            msgBox.style.color = "#e67e22";
+        } else if (allCorrect) {
+            msgBox.textContent = "🎉 Поздравляем! Все слова разгаданы верно!";
+            msgBox.style.color = "var(--correct-color)";
+        } else {
+            msgBox.textContent = "❌ Есть ошибки. Красные клетки нужно исправить.";
+            msgBox.style.color = "var(--wrong-color)";
+        }
+    }
+
+    // Очистка сетки
+    function resetGrid() {
+        for (let key in inputs) {
+            const input = inputs[key];
+            input.value = '';
+            input.classList.remove('correct', 'wrong');
+        }
+        document.getElementById('message-box').textContent = '';
+    }
+
+    // Запуск при загрузке страницы
+    window.onload = initCrossword;
+</script>
+
+
+</body></html>
