@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Моя презентация</title>
-    <!-- Подключаем красивые шрифты -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Montserrat:wght@500;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -93,6 +92,7 @@
             padding: 40px;
             border-radius: 20px;
             box-shadow: var(--shadow-soft);
+            margin-bottom: 30px;
         }
 
         h2 {
@@ -103,7 +103,6 @@
             margin-top: 0;
         }
 
-        /* Светлая тема для кода */
         pre {
             background-color: var(--code-bg);
             color: var(--code-text);
@@ -122,7 +121,6 @@
             text-shadow: 0px 0px 1px rgba(72, 187, 120, 0.2);
         }
 
-        /* Стили для блока машинного обучения */
         .ml-section {
             margin-top: 40px;
             background: linear-gradient(135deg, #ffffff 0%, #f7fafc 100%);
@@ -200,6 +198,201 @@
         .pred-fact { color: #e53e3e; }
         .pred-val { color: #38a169; font-weight: bold; }
 
+        /* Стили для кроссвордов */
+        .crossword-section {
+            margin-top: 40px;
+            background: linear-gradient(135deg, #ffffff 0%, #f7fafc 100%);
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .crossword-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 6px;
+            height: 100%;
+            background: linear-gradient(to bottom, #48bb78, #38b2ac);
+        }
+
+        .crossword-title {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-heading);
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+        }
+
+        .crossword-container {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .crossword-grid {
+            display: grid;
+            gap: 1px;
+            background-color: #34495e;
+            border: 2px solid #34495e;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .crossword-grid.anat {
+            grid-template-columns: repeat(20, 35px);
+            grid-template-rows: repeat(18, 35px);
+        }
+
+        .crossword-grid.pharm {
+            grid-template-columns: repeat(12, 40px);
+            grid-template-rows: repeat(8, 40px);
+        }
+
+        .cell {
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cell.empty {
+            background-color: #34495e;
+        }
+
+        .cell input {
+            width: 100%;
+            height: 100%;
+            border: none;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
+            outline: none;
+            background: transparent;
+            color: var(--text-heading);
+            padding: 0;
+            margin: 0;
+        }
+
+        .cell input:focus {
+            background-color: #e0f2f1;
+        }
+
+        .cell input.correct {
+            background-color: #d5f5e3 !important;
+            color: #27ae60;
+        }
+
+        .cell input.wrong {
+            background-color: #fadbd8 !important;
+            color: #e74c3c;
+        }
+
+        .cell-number {
+            position: absolute;
+            top: 2px;
+            left: 3px;
+            font-size: 10px;
+            font-weight: bold;
+            color: #7f8c8d;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .clues-box {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            min-width: 280px;
+            max-width: 350px;
+        }
+
+        .clues-box h4 {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-heading);
+            border-bottom: 2px solid #48bb78;
+            padding-bottom: 8px;
+            margin-top: 0;
+        }
+
+        .clue-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .clue-list li {
+            margin-bottom: 10px;
+            line-height: 1.4;
+            font-size: 14px;
+        }
+
+        .clue-num {
+            font-weight: bold;
+            color: white;
+            background: #48bb78;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-right: 6px;
+        }
+
+        .crossword-controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .crossword-btn {
+            padding: 10px 20px;
+            font-size: 14px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: bold;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        }
+
+        .crossword-btn.check {
+            background-color: #48bb78;
+            color: white;
+        }
+
+        .crossword-btn.check:hover {
+            background-color: #38a169;
+            transform: translateY(-2px);
+        }
+
+        .crossword-btn.reset {
+            background-color: #95a5a6;
+            color: white;
+        }
+
+        .crossword-btn.reset:hover {
+            background-color: #7f8c8d;
+            transform: translateY(-2px);
+        }
+
+        .crossword-msg {
+            margin-top: 15px;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            min-height: 20px;
+        }
     </style>
 </head>
 <body>
@@ -275,7 +468,6 @@
 Время выполнения: 0.1498 сек.
             </pre>
 
-            <!-- Блок с результатами обучения -->
             <div class="ml-section">
                 <h3 class="ml-title">📊 Отчет от 23 марта 2026</h3>
                 
@@ -314,8 +506,360 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Новая секция: Работа от 20.06.2026 -->
+            <div class="crossword-section">
+                <h3 class="crossword-title">🧩 Работа от 20.06.2026: Кроссворды</h3>
+                
+                <!-- Кроссворд 1: Анатомия -->
+                <div style="margin-top: 30px;">
+                    <h4 style="color: #2d3748; font-family: 'Montserrat', sans-serif;">Кроссворд "Анатомия" (10 слов)</h4>
+                    <div class="crossword-container">
+                        <div id="grid-anat" class="crossword-grid anat"></div>
+                        <div class="clues-box">
+                            <h4>По горизонтали:</h4>
+                            <ul class="clue-list" id="across-anat"></ul>
+                            <h4 style="margin-top: 15px;">По вертикали:</h4>
+                            <ul class="clue-list" id="down-anat"></ul>
+                        </div>
+                    </div>
+                    <div class="crossword-controls">
+                        <button class="crossword-btn check" onclick="checkAnat()">Проверить</button>
+                        <button class="crossword-btn reset" onclick="resetAnat()">Очистить</button>
+                    </div>
+                    <div class="crossword-msg" id="msg-anat"></div>
+                </div>
+
+                <!-- Кроссворд 2: Фармакология -->
+                <div style="margin-top: 40px;">
+                    <h4 style="color: #2d3748; font-family: 'Montserrat', sans-serif;">Кроссворд "Фармакология" (5 слов)</h4>
+                    <div class="crossword-container">
+                        <div id="grid-pharm" class="crossword-grid pharm"></div>
+                        <div class="clues-box">
+                            <h4>По горизонтали:</h4>
+                            <ul class="clue-list" id="across-pharm"></ul>
+                            <h4 style="margin-top: 15px;">По вертикали:</h4>
+                            <ul class="clue-list" id="down-pharm"></ul>
+                        </div>
+                    </div>
+                    <div class="crossword-controls">
+                        <button class="crossword-btn check" onclick="checkPharm()">Проверить</button>
+                        <button class="crossword-btn reset" onclick="resetPharm()">Очистить</button>
+                    </div>
+                    <div class="crossword-msg" id="msg-pharm"></div>
+                </div>
+            </div>
         </main>
     </div>
+
+<script>
+    // ==================== КРОССВОРД: АНАТОМИЯ ====================
+    const wordsAnat = [
+        { id: 1, word: "МОЗГ", dir: "across", r: 1, c: 5, clue: "Центральный орган нервной системы" },
+        { id: 2, word: "ГОЛОВА", dir: "down", r: 1, c: 8, clue: "Верхняя часть тела человека" },
+        { id: 3, word: "ВЕНЫ", dir: "across", r: 5, c: 8, clue: "Кровеносные сосуды, несущие кровь к сердцу" },
+        { id: 4, word: "НЕРВ", dir: "down", r: 5, c: 10, clue: "Пучок нервных волокон" },
+        { id: 5, word: "РЕБРО", dir: "across", r: 7, c: 10, clue: "Изогнутая кость грудной клетки" },
+        { id: 6, word: "БЕДРО", dir: "down", r: 7, c: 12, clue: "Часть нижней конечности от таза до колена" },
+        { id: 7, word: "ДЕСНА", dir: "across", r: 9, c: 12, clue: "Слизистая оболочка, покрывающая челюсти" },
+        { id: 8, word: "НОГА", dir: "down", r: 9, c: 15, clue: "Парный орган опоры и движения" },
+        { id: 9, word: "ГЛАЗ", dir: "across", r: 11, c: 15, clue: "Парный орган зрения" },
+        { id: 10, word: "ЗРАЧОК", dir: "down", r: 11, c: 18, clue: "Отверстие в центре радужной оболочки глаза" }
+    ];
+
+    const ROWS_ANAT = 18;
+    const COLS_ANAT = 20;
+    let gridAnat = Array(ROWS_ANAT + 1).fill().map(() => Array(COLS_ANAT + 1).fill(null));
+    let inputsAnat = {};
+
+    function initAnat() {
+        const gridEl = document.getElementById('grid-anat');
+        const acrossList = document.getElementById('across-anat');
+        const downList = document.getElementById('down-anat');
+
+        wordsAnat.forEach(w => {
+            const li = document.createElement('li');
+            li.innerHTML = `<span class="clue-num">${w.id}</span> ${w.clue}`;
+            if (w.dir === 'across') acrossList.appendChild(li);
+            else downList.appendChild(li);
+
+            for (let i = 0; i < w.word.length; i++) {
+                let r = w.r + (w.dir === 'down' ? i : 0);
+                let c = w.c + (w.dir === 'across' ? i : 0);
+                
+                if (!gridAnat[r][c]) {
+                    gridAnat[r][c] = { letter: w.word[i], number: null };
+                }
+                
+                if (i === 0) {
+                    gridAnat[r][c].number = w.id;
+                }
+            }
+        });
+
+        for (let r = 1; r <= ROWS_ANAT; r++) {
+            for (let c = 1; c <= COLS_ANAT; c++) {
+                const cellDiv = document.createElement('div');
+                cellDiv.className = 'cell';
+                
+                if (gridAnat[r][c]) {
+                    if (gridAnat[r][c].number) {
+                        const numSpan = document.createElement('span');
+                        numSpan.className = 'cell-number';
+                        numSpan.textContent = gridAnat[r][c].number;
+                        cellDiv.appendChild(numSpan);
+                    }
+                    
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.maxLength = 1;
+                    input.dataset.row = r;
+                    input.dataset.col = c;
+                    input.dataset.letter = gridAnat[r][c].letter;
+                    
+                    input.addEventListener('input', (e) => handleInputAnat(e, r, c));
+                    input.addEventListener('keydown', (e) => handleKeydownAnat(e, r, c));
+                    
+                    cellDiv.appendChild(input);
+                    inputsAnat[`${r}-${c}`] = input;
+                } else {
+                    cellDiv.classList.add('empty');
+                }
+                
+                gridEl.appendChild(cellDiv);
+            }
+        }
+    }
+
+    function handleInputAnat(e, r, c) {
+        const val = e.target.value.toUpperCase();
+        e.target.value = val;
+        e.target.classList.remove('correct', 'wrong');
+        document.getElementById('msg-anat').textContent = '';
+
+        if (val) {
+            let nextR = r, nextC = c + 1;
+            if (!inputsAnat[`${nextR}-${nextC}`]) {
+                nextR = r + 1; nextC = c;
+            }
+            if (inputsAnat[`${nextR}-${nextC}`]) {
+                inputsAnat[`${nextR}-${nextC}`].focus();
+            }
+        }
+    }
+
+    function handleKeydownAnat(e, r, c) {
+        if (e.key === 'Backspace' && !e.target.value) {
+            let prevR = r, prevC = c - 1;
+            if (!inputsAnat[`${prevR}-${prevC}`]) {
+                prevR = r - 1; prevC = c;
+            }
+            if (inputsAnat[`${prevR}-${prevC}`]) {
+                inputsAnat[`${prevR}-${prevC}`].focus();
+            }
+        }
+    }
+
+    function checkAnat() {
+        let allCorrect = true;
+        let filledCount = 0;
+
+        for (let key in inputsAnat) {
+            const input = inputsAnat[key];
+            const val = input.value.toUpperCase();
+            const correctLetter = input.dataset.letter;
+
+            input.classList.remove('correct', 'wrong');
+
+            if (val) {
+                filledCount++;
+                if (val === correctLetter) {
+                    input.classList.add('correct');
+                } else {
+                    input.classList.add('wrong');
+                    allCorrect = false;
+                }
+            } else {
+                allCorrect = false;
+            }
+        }
+
+        const msgBox = document.getElementById('msg-anat');
+        if (filledCount === 0) {
+            msgBox.textContent = "⚠️ Сначала введите буквы!";
+            msgBox.style.color = "#e67e22";
+        } else if (allCorrect) {
+            msgBox.textContent = "🎉 Все анатомические термины разгаданы верно!";
+            msgBox.style.color = "#48bb78";
+        } else {
+            msgBox.textContent = "❌ Есть ошибки. Исправьте красные клетки.";
+            msgBox.style.color = "#e74c3c";
+        }
+    }
+
+    function resetAnat() {
+        for (let key in inputsAnat) {
+            const input = inputsAnat[key];
+            input.value = '';
+            input.classList.remove('correct', 'wrong');
+        }
+        document.getElementById('msg-anat').textContent = '';
+    }
+
+    // ==================== КРОССВОРД: ФАРМАКОЛОГИЯ ====================
+    const wordsPharm = [
+        { id: 1, word: "ТАБЛЕТКА", dir: "across", r: 2, c: 1, clue: "Твердая дозированная лекарственная форма" },
+        { id: 2, word: "МАЗЬ", dir: "down", r: 1, c: 2, clue: "Мягкая лекарственная форма для наружного применения" },
+        { id: 3, word: "АМПУЛА", dir: "down", r: 2, c: 8, clue: "Запаянный стеклянный сосуд для стерильных растворов" },
+        { id: 4, word: "ШПРИЦ", dir: "across", r: 4, c: 7, clue: "Инструмент для введения и отсасывания жидкостей" },
+        { id: 5, word: "КАПЛЯ", dir: "across", r: 6, c: 5, clue: "Малая доза жидкого лекарства" }
+    ];
+
+    const ROWS_PHARM = 8;
+    const COLS_PHARM = 12;
+    let gridPharm = Array(ROWS_PHARM + 1).fill().map(() => Array(COLS_PHARM + 1).fill(null));
+    let inputsPharm = {};
+
+    function initPharm() {
+        const gridEl = document.getElementById('grid-pharm');
+        const acrossList = document.getElementById('across-pharm');
+        const downList = document.getElementById('down-pharm');
+
+        wordsPharm.forEach(w => {
+            const li = document.createElement('li');
+            li.innerHTML = `<span class="clue-num">${w.id}</span> ${w.clue}`;
+            if (w.dir === 'across') acrossList.appendChild(li);
+            else downList.appendChild(li);
+
+            for (let i = 0; i < w.word.length; i++) {
+                let r = w.r + (w.dir === 'down' ? i : 0);
+                let c = w.c + (w.dir === 'across' ? i : 0);
+                
+                if (!gridPharm[r][c]) {
+                    gridPharm[r][c] = { letter: w.word[i], number: null };
+                }
+                
+                if (i === 0) {
+                    gridPharm[r][c].number = w.id;
+                }
+            }
+        });
+
+        for (let r = 1; r <= ROWS_PHARM; r++) {
+            for (let c = 1; c <= COLS_PHARM; c++) {
+                const cellDiv = document.createElement('div');
+                cellDiv.className = 'cell';
+                
+                if (gridPharm[r][c]) {
+                    if (gridPharm[r][c].number) {
+                        const numSpan = document.createElement('span');
+                        numSpan.className = 'cell-number';
+                        numSpan.textContent = gridPharm[r][c].number;
+                        cellDiv.appendChild(numSpan);
+                    }
+                    
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.maxLength = 1;
+                    input.dataset.row = r;
+                    input.dataset.col = c;
+                    input.dataset.letter = gridPharm[r][c].letter;
+                    
+                    input.addEventListener('input', (e) => handleInputPharm(e, r, c));
+                    input.addEventListener('keydown', (e) => handleKeydownPharm(e, r, c));
+                    
+                    cellDiv.appendChild(input);
+                    inputsPharm[`${r}-${c}`] = input;
+                } else {
+                    cellDiv.classList.add('empty');
+                }
+                
+                gridEl.appendChild(cellDiv);
+            }
+        }
+    }
+
+    function handleInputPharm(e, r, c) {
+        const val = e.target.value.toUpperCase();
+        e.target.value = val;
+        e.target.classList.remove('correct', 'wrong');
+        document.getElementById('msg-pharm').textContent = '';
+
+        if (val) {
+            let nextR = r, nextC = c + 1;
+            if (!inputsPharm[`${nextR}-${nextC}`]) {
+                nextR = r + 1; nextC = c;
+            }
+            if (inputsPharm[`${nextR}-${nextC}`]) {
+                inputsPharm[`${nextR}-${nextC}`].focus();
+            }
+        }
+    }
+
+    function handleKeydownPharm(e, r, c) {
+        if (e.key === 'Backspace' && !e.target.value) {
+            let prevR = r, prevC = c - 1;
+            if (!inputsPharm[`${prevR}-${prevC}`]) {
+                prevR = r - 1; prevC = c;
+            }
+            if (inputsPharm[`${prevR}-${prevC}`]) {
+                inputsPharm[`${prevR}-${prevC}`].focus();
+            }
+        }
+    }
+
+    function checkPharm() {
+        let allCorrect = true;
+        let filledCount = 0;
+
+        for (let key in inputsPharm) {
+            const input = inputsPharm[key];
+            const val = input.value.toUpperCase();
+            const correctLetter = input.dataset.letter;
+
+            input.classList.remove('correct', 'wrong');
+
+            if (val) {
+                filledCount++;
+                if (val === correctLetter) {
+                    input.classList.add('correct');
+                } else {
+                    input.classList.add('wrong');
+                    allCorrect = false;
+                }
+            } else {
+                allCorrect = false;
+            }
+        }
+
+        const msgBox = document.getElementById('msg-pharm');
+        if (filledCount === 0) {
+            msgBox.textContent = "⚠️ Сначала введите буквы!";
+            msgBox.style.color = "#e67e22";
+        } else if (allCorrect) {
+            msgBox.textContent = "🎉 Все фармакологические термины разгаданы верно!";
+            msgBox.style.color = "#48bb78";
+        } else {
+            msgBox.textContent = "❌ Есть ошибки. Исправьте красные клетки.";
+            msgBox.style.color = "#e74c3c";
+        }
+    }
+
+    function resetPharm() {
+        for (let key in inputsPharm) {
+            const input = inputsPharm[key];
+            input.value = '';
+            input.classList.remove('correct', 'wrong');
+        }
+        document.getElementById('msg-pharm').textContent = '';
+    }
+
+    // Инициализация при загрузке страницы
+    window.onload = function() {
+        initAnat();
+        initPharm();
+    };
+</script>
 
 </body>
 </html>
